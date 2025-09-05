@@ -1,12 +1,12 @@
 # Copyright 2022 Manna Harbour
 # https://github.com/manna-harbour/miryoku
 
-name: 'Auto Build'
+name: "Auto Build"
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   auto-build:
@@ -14,7 +14,7 @@ jobs:
     secrets: inherit
     with:
       board: '["nice_nano_v2"]'
-      shield: '["corne_left","corne_right"]'
+      shield: '["corne_left","corne_right", "settings_reset"]'
       alphas: '["QWERTY"]'
       nav: '["vi"]'
       layers: '["default"]'

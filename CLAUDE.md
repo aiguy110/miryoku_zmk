@@ -94,6 +94,79 @@ left:  ESC(MEDIA)  SPACE(NAV)  TAB(MOUSE)   |   right: RET(SYM)  BSPC(NUM)  DEL(
 
 MEDIA is the **outermost left thumb**.
 
+## Flashing SOP (pull → download CI firmware → flash both halves)
+
+Firmware is never built locally — flash the `Auto Build` artifacts for the commit
+you just pulled.
+
+1. **Pull over HTTPS.** `git pull` over SSH hangs in agent sessions (the ssh-agent
+   waits on an unlock prompt nobody sees). Fetch the public repo instead:
+
+   ```sh
+   timeout 30 git fetch https://github.com/aiguy110/miryoku_zmk.git master
+   git merge --ff-only FETCH_HEAD
+   ```
+
+2. **Find the build for that SHA.** `gh run list -b master` can return stale runs —
+   match on `headSha` instead, and confirm `Auto Build` concluded `success`:
+
+   ```sh
+   gh run list -L 4 -R aiguy110/miryoku_zmk \
+     --json databaseId,headSha,workflowName,conclusion \
+     --jq '.[] | "\(.databaseId) \(.headSha[:7]) \(.workflowName) \(.conclusion)"'
+   ```
+
+3. **Download into a fresh temp dir** (don't `rm -rf` a reused one — the safety
+   check blocks it):
+
+   ```sh
+   D=$(mktemp -d /tmp/fw-XXXX)
+   gh run download <run-id> -R aiguy110/miryoku_zmk -D "$D"
+   ```
+
+   You get `corne_left`, `corne_right` and `settings_reset` dirs, each with a
+   `zmk.uf2`.
+
+4. **Start a background watcher, then tell the user the order: left first, then
+   right.** It flashes left on the first bootloader mount, waits for the drive to
+   go away, then flashes right on the second mount:
+
+   ```sh
+   M=/media/josiah/NICENANO; B="$D"/miryoku_zmk-corne_
+   flash() { # $1 = left|right
+     for i in $(seq 1 300); do
+       if [ -f "$M/INFO_UF2.TXT" ]; then
+         sleep 1; cp "${B}$1"-*/zmk.uf2 "$M/" && sync; echo "copied $1 firmware (exit $?)"
+         for j in $(seq 1 30); do [ -e "$M/INFO_UF2.TXT" ] || return 0; sleep 1; done
+         echo "drive didn't unmount after $1"; return 1
+       fi
+       sleep 2
+     done; echo "timed out waiting for $1"; return 1
+   }
+   flash left && flash right
+   ```
+
+   The user double-taps reset on each half to enter the UF2 bootloader; the desktop
+   automounts it at `/media/josiah/NICENANO`.
+
+5. **Verify.** Watcher output shows both `copied … (exit 0)` lines, the drive is gone,
+   and `lsusb` shows `1d50:615e … Josiah_Chocofi` again (either half enumerates
+   under that name, so this doesn't tell you which half).
+
+Gotchas:
+
+- **Detect the bootloader by mount path, not label.** The nice!nano exposes a bare
+  disk (`sda`, no partition) and `lsblk -o LABEL` comes back empty for it, so a
+  label match never fires. `lsusb` shows `239a:00b3 Adafruit nice!nano` while it's in
+  the bootloader.
+- The watcher can't tell the halves apart — the order is the only safeguard. If the
+  halves stop talking to each other afterwards, re-flash each one with its own
+  image.
+- Keymap-only changes strictly need only the left (central) half, but flash both
+  anyway so the halves stay on the same build.
+- Don't `pkill -f` the watcher with a pattern that also appears in your own command
+  line — it kills the shell running the `pkill`. Kill it by PID or let it time out.
+
 ## Bluetooth pairing
 
 BT profile keys are on the **MEDIA layer, bottom row, right hand**

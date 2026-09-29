@@ -21,5 +21,6 @@ jobs:
       mapping: '["default"]'
       custom_config: '["default"]'
       kconfig: '["default"]'
-      branches: '["default"]'
+      # zmk main moved to Zephyr 4 / HWMv2 (no nice_nano_v2 board); pin v0.3.
+      branches: '["zmkfirmware/zmk/v0.3"]'
       modules: '["default"]'

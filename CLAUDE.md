@@ -94,6 +94,26 @@ left:  ESC(MEDIA)  SPACE(NAV)  TAB(MOUSE)   |   right: RET(SYM)  BSPC(NUM)  DEL(
 
 MEDIA is the **outermost left thumb**.
 
+## Git workflow SOP (commit straight to master)
+
+Single-user project: **no topic branches, no PRs.** Commit and push directly to
+`master`. If the session is in a worktree on some other local branch (e.g.
+`tandem/master/*`), push `HEAD:master` rather than pushing that branch.
+
+Push over HTTPS with the `gh` credentials. SSH push fails here with "Please make sure
+you have the correct access rights". The active `gh` account must be **`aiguy110`**
+(the repo owner), not the OPSWAT account. Check with `gh auth status`, and fix with
+`gh auth switch -u aiguy110` if needed:
+
+```sh
+timeout 30 git fetch https://github.com/aiguy110/miryoku_zmk.git master
+git rebase FETCH_HEAD   # only if master moved
+timeout 60 git -c credential.helper= -c credential.helper='!gh auth git-credential' \
+  push https://github.com/aiguy110/miryoku_zmk.git HEAD:master
+```
+
+Every push to `master` triggers `Auto Build`, docs-only commits included.
+
 ## Flashing SOP (pull → download CI firmware → flash both halves)
 
 Firmware is never built locally — flash the `Auto Build` artifacts for the commit

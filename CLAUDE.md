@@ -31,7 +31,7 @@ builds nothing.
 
 ## Local customizations vs. upstream
 
-Only two things diverge from upstream miryoku:
+Three things diverge from upstream miryoku:
 
 1. **`miryoku/miryoku_babel/miryoku_layer_alternatives.h:117`** — home-row mods on the
    QWERTY base layer, reordered pinky→index to **Shift, Ctrl, Super, Alt**
@@ -55,6 +55,15 @@ Only two things diverge from upstream miryoku:
    CONFIG_ZMK_POINTING=y
    CONFIG_ZMK_KEYBOARD_NAME="Josiah_Chocofi"
    ```
+
+3. **gazepoint integration** (`miryoku/miryoku_gazepoint.{h,dtsi}`), for
+   [gazepoint](https://github.com/aiguy110/gazepoint):
+   - Base QWERTY MOUSE thumb (TAB) is `U_GAZE_LT`: a hold-tap whose hold is a macro
+     doing `&mo U_MOUSE` **and** holding `F14` (gazepoint's aim hotkey).
+   - MOUSE_VI: `F15` (re-aim) on the right pinky home (`'` position); right thumbs
+     are now **left click** (RET pos), **right click** (BSPC pos), middle (DEL pos).
+     Upstream is right/left/middle. BUTTON layer thumbs are unchanged.
+   - Every host on any BT profile sees F14 whenever TAB is held for the layer.
 
 ## Reading the keymap
 

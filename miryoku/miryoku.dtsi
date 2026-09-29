@@ -32,6 +32,8 @@ MIRYOKU_LAYER_LIST
 
 #include "miryoku_mousekeys.dtsi"
 
+#include "miryoku_gazepoint.dtsi"
+
 #if defined (MIRYOKU_KLUDGE_THUMBCOMBOS)
   #include "miryoku_kludge_thumbcombos.dtsi"
 #endif

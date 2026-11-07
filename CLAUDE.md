@@ -179,6 +179,10 @@ Gotchas:
   disk (`sda`, no partition) and `lsblk -o LABEL` comes back empty for it, so a
   label match never fires. `lsusb` shows `239a:00b3 Adafruit nice!nano` while it's in
   the bootloader.
+- **Automount doesn't always happen.** If `lsusb` shows `239a:00b3` but
+  `/media/josiah/NICENANO` never appears, the watcher just times out. Mount it
+  by hand: find the ~32M `nRF UF2` disk with `lsblk`, then
+  `udisksctl mount -b /dev/sdX` (no sudo needed; it mounts at the usual path).
 - The watcher can't tell the halves apart — the order is the only safeguard. If the
   halves stop talking to each other afterwards, re-flash each one with its own
   image.

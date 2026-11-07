@@ -1,0 +1,15 @@
+// Gaming layer: see miryoku_game.h.
+
+/ {
+  behaviors {
+    // Hold-preferred so Fn+key fires the instant the second key goes down
+    // (no tapping-term wait); a lone tap still sends ESC.
+    u_game_lt: u_game_lt {
+      compatible = "zmk,behavior-hold-tap";
+      #binding-cells = <2>;
+      tapping-term-ms = <U_TAPPING_TERM>;
+      flavor = "hold-preferred";
+      bindings = <&mo>, <&kp>;
+    };
+  };
+};

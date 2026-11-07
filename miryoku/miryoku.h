@@ -5,6 +5,7 @@
 
 #include "miryoku_babel/miryoku_layer_selection.h"
 #include "miryoku_babel/miryoku_layer_list.h"
+#include "miryoku_game.h"
 
 #define U_MACRO_VA_ARGS(macro, ...) macro(__VA_ARGS__)
 #define U_STRINGIFY(x) #x

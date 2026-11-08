@@ -3,7 +3,7 @@
 //
 // Enter:  hold MEDIA (left outer thumb), double-tap the T position.
 //         (Also on NAV / MOUSE / NUM / SYM / FUN, next to the other mode keys.)
-// GAME_FN digits sit where they do on NUM (7-9 / 4-6 / 1-3); 0 moves to
+// GAME_FN digits: NUM's numpad flipped vertically (1-3 / 4-6 / 7-9); 0 on
 // the pinky top since NUM's 0 is on a thumb the held Fn key occupies.
 // Exit:   hold the GAME outer thumb (GAME_FN), double-tap the left pinky
 //         bottom key. GAME_FN thumb keys are unusable (the same thumb is
@@ -18,9 +18,9 @@
 U_NP,              U_NP,              &u_game_lt U_GAME_FN ESC,&kp SPACE,    &kp LALT,          &kp RET,           &kp BSPC,          &kp DEL,           U_NP,              U_NP
 
 #define MIRYOKU_LAYER_GAME_FN \
-&kp N0,            &kp N7,            &kp N8,            &kp N9,            &kp T,             &kp GRAVE,          &trans,            &trans,            &trans,            &trans,            \
+&kp N0,            &kp N1,            &kp N2,            &kp N3,            &kp T,             &kp GRAVE,          &trans,            &trans,            &trans,            &trans,            \
 &kp M,             &kp N4,            &kp N5,            &kp N6,            &kp G,             &trans,            &trans,            &trans,            &trans,            &trans,            \
-&u_to_U_BASE,      &kp N1,            &kp N2,            &kp N3,            &kp B,             &trans,            &trans,            &trans,            &trans,            &trans,            \
+&u_to_U_BASE,      &kp N7,            &kp N8,            &kp N9,            &kp B,             &trans,            &trans,            &trans,            &trans,            &trans,            \
 U_NP,              U_NP,              U_NA,              &trans,            &trans,            &trans,            &trans,            &trans,            U_NP,              U_NP
 
 #define MIRYOKU_LAYERMAPPING_GAME MIRYOKU_MAPPING
